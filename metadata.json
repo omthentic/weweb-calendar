@@ -1,0 +1,5 @@
+{
+  "name": "Streak Tracking Calendar",
+  "description": "A visual calendar component for WeWeb that tracks daily streaks and visualizes progress.",
+  "requestFramePermissions": []
+}
