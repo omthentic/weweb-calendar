@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A streak tracking calendar component for WeWeb",
   "scripts": {
-    "serve": "npx @weweb/cli serve --port 8080",
-    "build": "npx @weweb/cli build",
+    "serve": "npx @weweb/cli serve --port 8080 name=streak-tracking-calendar type=wwElement",
+    "build": "npx @weweb/cli build name=streak-tracking-calendar type=wwElement",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
