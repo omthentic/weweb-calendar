@@ -203,7 +203,6 @@ export default {
             type: "Length",
             defaultValue: "-7px",
             bindable: true,
-            defaultValue: "0px",
             section: 'settings',
         },
         monthYearBottomMargin: {
