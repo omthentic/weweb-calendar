@@ -133,7 +133,18 @@ export default {
 
     // Process API Result into a map for date lookups
     const sessionData = computed(() => {
-        const result = props.content?.apiResult;
+        let result = props.content?.apiResult;
+        
+        // Handle if apiResult is a JSON string instead of an object
+        if (typeof result === 'string') {
+            try {
+                result = JSON.parse(result);
+            } catch (e) {
+                console.error('Failed to parse apiResult:', e);
+                return {};
+            }
+        }
+        
         if (!result || !Array.isArray(result.return)) {
             return {};
         }
