@@ -30,7 +30,6 @@ export default {
         user_id: {
             label: { en: "User ID" },
             type: "Number",
-            defaultValue: 10,
             bindable: true,
             section: "settings",
         },
