@@ -286,6 +286,8 @@ export default {
       year,
       monthName,
       monthIndex,
+      apiMonth,
+      apiYear,
       weekDays,
       calendarGrid,
       changeMonth,
