@@ -138,19 +138,47 @@ export default {
         console.log('📅 Calendar - Raw apiResult:', result);
         console.log('📅 Calendar - apiResult type:', typeof result);
         
-        // Handle if apiResult is a JSON string instead of an object
+        // Handle CSV-style format: "date, count" per line
+        if (typeof result === 'string' && result.includes(',')) {
+            console.log('📅 Calendar - Detected CSV format');
+            const sessionMap = {};
+            const lines = result.split('\n');
+            
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return; // Skip empty lines
+                
+                const parts = trimmed.split(',').map(p => p.trim());
+                if (parts.length >= 2) {
+                    const date = parts[0];
+                    const count = parseInt(parts[1], 10);
+                    
+                    if (date && !isNaN(count)) {
+                        sessionMap[date] = count;
+                        console.log(`  ✓ Parsed: ${date} → ${count}`);
+                    }
+                }
+            });
+            
+            console.log('✅ Calendar - CSV Processed sessionMap:', sessionMap);
+            console.log('✅ Calendar - Total dates:', Object.keys(sessionMap).length);
+            return sessionMap;
+        }
+        
+        // Handle JSON string format
         if (typeof result === 'string') {
             try {
                 result = JSON.parse(result);
-                console.log('📅 Calendar - Parsed apiResult:', result);
+                console.log('📅 Calendar - Parsed JSON apiResult:', result);
             } catch (e) {
                 console.error('❌ Calendar - Failed to parse apiResult:', e);
                 return {};
             }
         }
         
+        // Handle object format with "return" array
         if (!result || !Array.isArray(result.return)) {
-            console.warn('⚠️ Calendar - Invalid apiResult format. Expected: {return: [{date, count}]}');
+            console.warn('⚠️ Calendar - Invalid apiResult format. Expected: {return: [{date, count}]} or CSV format');
             console.log('📅 Calendar - result.return:', result?.return);
             return {};
         }
