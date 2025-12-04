@@ -133,6 +133,12 @@ export default {
       monthOffset.value = 0;
     });
 
+    // Computed User ID to ensure reactivity and type safety
+    const userId = computed(() => {
+        const id = Number(props.content.user_id);
+        return isNaN(id) ? 10 : id;
+    });
+
     const displayedDate = computed(() => {
         let base = new Date();
         if (props.content.currentDate) {
@@ -269,7 +275,7 @@ export default {
       const payload = {
         month: monthIndex.value + 1, // 1-indexed for API
         year: year.value,
-        user_id: props.content.user_id || 10 // Default to 10 if not set
+        user_id: userId.value
       };
       
       try {
@@ -314,7 +320,7 @@ export default {
     });
 
     // Watch for month/year changes to refetch
-    watch([monthIndex, year, () => props.content.user_id], () => {
+    watch([monthIndex, year, userId], () => {
       fetchCalendarData();
     });
 
