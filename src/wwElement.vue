@@ -165,6 +165,7 @@ export default {
         '--sc-radius': props.content.borderRadius || '8px',
         '--sc-font': props.content.globalFontFamily || 'inherit',
         '--sc-cal-padding': props.content.calendarPadding || '16px',
+        '--sc-day-gap': props.content.dayCellGap || '8px',
         
         // Header & Typography Bindings
         '--sc-title-col': props.content.monthTitleColor || '#222',
@@ -365,7 +366,8 @@ export default {
 .weekdays-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--sc-day-gap);
   /* Match the left/right padding of the days-grid-wrapper so columns align */
   padding: 0 var(--sc-cal-padding);
 }
@@ -401,7 +403,8 @@ export default {
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--sc-day-gap);
 }
 
 /* Placeholder must match wrapper dimensions perfectly including padding */
