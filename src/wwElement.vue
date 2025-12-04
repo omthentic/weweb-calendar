@@ -138,27 +138,37 @@ export default {
         console.log('📅 Calendar - Raw apiResult:', result);
         console.log('📅 Calendar - apiResult type:', typeof result);
         
-        // Handle CSV-style format: "date, count" per line
+        // Handle CSV-style format: "date, count" pairs (space or newline separated)
         if (typeof result === 'string' && result.includes(',')) {
             console.log('📅 Calendar - Detected CSV format');
             const sessionMap = {};
-            const lines = result.split('\n');
             
-            lines.forEach(line => {
-                const trimmed = line.trim();
-                if (!trimmed) return; // Skip empty lines
+            // Split by both newlines and spaces to handle different formats
+            // Replace multiple spaces with single space, then split
+            const normalized = result.replace(/\s+/g, ' ').trim();
+            const parts = normalized.split(' ');
+            
+            // Process pairs: "date, count"
+            for (let i = 0; i < parts.length; i++) {
+                const part = parts[i].trim();
+                if (!part) continue;
                 
-                const parts = trimmed.split(',').map(p => p.trim());
-                if (parts.length >= 2) {
-                    const date = parts[0];
-                    const count = parseInt(parts[1], 10);
+                // Check if this part contains a comma (it's a "date," part)
+                if (part.includes(',')) {
+                    const date = part.replace(',', '').trim();
+                    const countStr = parts[i + 1];
                     
-                    if (date && !isNaN(count)) {
-                        sessionMap[date] = count;
-                        console.log(`  ✓ Parsed: ${date} → ${count}`);
+                    if (countStr) {
+                        const count = parseInt(countStr.replace(',', '').trim(), 10);
+                        
+                        if (date && !isNaN(count)) {
+                            sessionMap[date] = count;
+                            console.log(`  ✓ Parsed: ${date} → ${count}`);
+                        }
+                        i++; // Skip the count part in next iteration
                     }
                 }
-            });
+            }
             
             console.log('✅ Calendar - CSV Processed sessionMap:', sessionMap);
             console.log('✅ Calendar - Total dates:', Object.keys(sessionMap).length);
