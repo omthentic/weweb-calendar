@@ -1,10 +1,10 @@
 {
   "name": "streak-tracking-calendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A streak tracking calendar component for WeWeb",
   "scripts": {
-    "serve": "npx @weweb/cli serve --port 8080 name=streak-tracking-calendar type=wwElement",
-    "build": "npx @weweb/cli build name=streak-tracking-calendar type=wwElement",
+    "serve": "weweb serve --port=8080",
+    "build": "weweb build",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
@@ -12,7 +12,7 @@
     "date-fns": "^2.30.0"
   },
   "devDependencies": {
-    "@weweb/cli": "latest",
+    "@weweb/cli": "^3.8.13",
     "eslint": "^8.45.0",
     "eslint-plugin-vue": "^9.15.1"
   }
