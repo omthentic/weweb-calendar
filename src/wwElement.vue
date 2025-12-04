@@ -24,7 +24,13 @@
       </div>
 
       <!-- Next Button -->
-      <button class="nav-btn" @click="changeMonth(1)" type="button" aria-label="Next Month">
+      <button 
+        class="nav-btn" 
+        @click="changeMonth(1)" 
+        type="button" 
+        aria-label="Next Month"
+        :style="{ visibility: isCurrentMonth ? 'hidden' : 'visible' }"
+      >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -148,6 +154,21 @@ export default {
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     });
 
+    // Check if currently displayed month is the current real-time month (or future)
+    const isCurrentMonth = computed(() => {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        
+        // If displayed year is greater than current year, it's future (shouldn't happen with restriction but good for safety)
+        if (year.value > currentYear) return true;
+        
+        // If same year and displayed month is >= current month, it's current or future
+        if (year.value === currentYear && monthIndex.value >= currentMonth) return true;
+        
+        return false;
+    });
+
     // Calculate Target/Interview date string
     const targetDateStr = computed(() => {
         if (!props.content.targetDate) return null;
@@ -228,6 +249,9 @@ export default {
     });
 
     const changeMonth = (dir) => {
+      // Prevent going to future months
+      if (dir > 0 && isCurrentMonth.value) return;
+
       // Set slide direction before changing month
       // Left arrow (dir < 0) should slide right, right arrow (dir > 0) should slide left
       slideDirection.value = dir > 0 ? 'left' : 'right';
@@ -305,7 +329,8 @@ export default {
       cssVars,
       slideDirection,
       todayDateStr,
-      targetDateStr
+      targetDateStr,
+      isCurrentMonth
     };
   }
 };
