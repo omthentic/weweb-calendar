@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 export default {
   props: {
@@ -125,22 +125,27 @@ export default {
     const monthOffset = ref(0);
     // Track slide direction for animation
     const slideDirection = ref('right');
-    // Store session data from API
-    const sessionData = ref({});
 
     // Watch for external date changes to reset view
     watch(() => props.content.currentDate, () => {
       monthOffset.value = 0;
     });
 
-
-    // Computed User ID to ensure reactivity and type safety
-    const userId = computed(() => {
-        const raw = props.content?.user_id;
-        const n = typeof raw === 'number' ? raw : Number(raw);
-        return Number.isFinite(n) ? n : 10; // fallback to 10 only if nothing valid is provided
+    // Process API Result into a map for date lookups
+    const sessionData = computed(() => {
+        const result = props.content?.apiResult;
+        if (!result || !Array.isArray(result.return)) {
+            return {};
+        }
+        
+        const sessionMap = {};
+        result.return.forEach(item => {
+            if (item.date && typeof item.count === 'number') {
+                sessionMap[item.date] = item.count;
+            }
+        });
+        return sessionMap;
     });
-
     const displayedDate = computed(() => {
         let base = new Date();
         if (props.content.currentDate) {
@@ -276,67 +281,6 @@ export default {
       emit('trigger-event', { name: 'onDateClick', event: { date: dateStr } });
     };
 
-    // Fetch calendar data from API
-    const fetchCalendarData = async () => {
-      const payload = {
-        month: apiMonth.value,
-        year: apiYear.value,
-        user_id: userId.value
-      };
-      
-      try {
-        const response = await fetch('https://xtdz-pj2k-avay.a2.xano.io/api:9A1JJPSy/calendar', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-        
-        if (!response.ok) {
-          console.error('Failed to fetch calendar data:', response.statusText);
-          return;
-        }
-        
-        const data = await response.json();
-        console.log('Calendar data fetched:', data);
-        
-        // Process data into a map for easier lookup: { "YYYY-MM-DD": count }
-        const sessionMap = {};
-        if (data && Array.isArray(data.return)) {
-            data.return.forEach(item => {
-                if (item.date && typeof item.count === 'number') {
-                    sessionMap[item.date] = item.count;
-                }
-            });
-        }
-        sessionData.value = sessionMap;
-        
-        // Emitting an event with the fetched data so the parent can handle it if needed
-        emit('trigger-event', { name: 'onDataFetched', event: { data } });
-        
-      } catch (error) {
-        console.error('Error fetching calendar data:', error);
-      }
-    };
-
-    // Fetch on mount
-    onMounted(() => {
-      fetchCalendarData();
-    });
-
-    // Watch for month/year changes to refetch
-    watch([monthIndex, year, userId], () => {
-      fetchCalendarData();
-    });
-
-    // Watch for reference date changes from WeWeb editor
-    watch(
-      () => props.content?.currentDate,
-      () => {
-        fetchCalendarData();
-      }
-    );
 
     return {
       year,

@@ -27,19 +27,13 @@ export default {
             section: "settings",
             /* The calendar will show the month of this date */
         },
-        user_id: {
-            label: { en: "User ID" },
-            type: "Number",
+        apiResult: {
+            label: { en: "API Result" },
+            type: "Object",
             bindable: true,
+            defaultValue: { return: [] },
             section: "settings",
-        },
-        dates: {
-            label: { en: "Completed Dates" },
-            type: "Array",
-            bindable: true,
-            defaultValue: [],
-            section: "settings",
-            /* Expects array of ISO Date Strings e.g. ["2023-10-01"] */
+            /* Expected format: {"return":[{"date":"2025-12-03","count":6},...]} */
         },
 
         sectionColors: {
