@@ -156,6 +156,10 @@ export default {
     const monthIndex = computed(() => displayedDate.value.getMonth()); 
     const monthName = computed(() => displayedDate.value.toLocaleString('default', { month: 'long' }));
     
+    // API month and year values (1-indexed month for API)
+    const apiMonth = computed(() => monthIndex.value + 1); // 1-12
+    const apiYear = computed(() => year.value);
+    
     // Calculate Today's date string in YYYY-MM-DD format based on local client time
     const todayDateStr = computed(() => {
       const now = new Date();
@@ -275,8 +279,8 @@ export default {
     // Fetch calendar data from API
     const fetchCalendarData = async () => {
       const payload = {
-        month: monthIndex.value + 1, // 1-indexed for API
-        year: year.value,
+        month: apiMonth.value,
+        year: apiYear.value,
         user_id: userId.value
       };
       
@@ -326,13 +330,13 @@ export default {
       fetchCalendarData();
     });
 
-    // Update content props with current month and year for external use
-    watch([monthIndex, year], () => {
-      if (props.content) {
-        props.content.currentMonth = monthIndex.value + 1; // 1-indexed (1-12)
-        props.content.currentYear = year.value;
+    // Watch for reference date changes from WeWeb editor
+    watch(
+      () => props.content?.currentDate,
+      () => {
+        fetchCalendarData();
       }
-    }, { immediate: true });
+    );
 
     return {
       year,

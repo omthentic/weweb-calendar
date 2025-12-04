@@ -33,21 +33,6 @@ export default {
             bindable: true,
             section: "settings",
         },
-        currentMonth: {
-            label: { en: "Current Month (Integer)" },
-            type: "Number",
-            bindable: true,
-            readonly: true,
-            section: "settings",
-            /* 1-12 representing January-December */
-        },
-        currentYear: {
-            label: { en: "Current Year (Integer)" },
-            type: "Number",
-            bindable: true,
-            readonly: true,
-            section: "settings",
-        },
         dates: {
             label: { en: "Completed Dates" },
             type: "Array",
