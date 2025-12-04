@@ -326,6 +326,14 @@ export default {
       fetchCalendarData();
     });
 
+    // Update content props with current month and year for external use
+    watch([monthIndex, year], () => {
+      if (props.content) {
+        props.content.currentMonth = monthIndex.value + 1; // 1-indexed (1-12)
+        props.content.currentYear = year.value;
+      }
+    }, { immediate: true });
+
     return {
       year,
       monthName,
