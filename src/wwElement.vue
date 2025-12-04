@@ -135,8 +135,11 @@ export default {
 
     // Computed User ID to ensure reactivity and type safety
     const userId = computed(() => {
+        console.log('🔍 userId computed - props.content.user_id:', props.content.user_id);
         const id = Number(props.content.user_id);
-        return isNaN(id) ? 10 : id;
+        const result = isNaN(id) ? 10 : id;
+        console.log('🔍 userId computed - final value:', result);
+        return result;
     });
 
     const displayedDate = computed(() => {
@@ -272,11 +275,13 @@ export default {
 
     // Fetch calendar data from API
     const fetchCalendarData = async () => {
+      console.log('📡 Fetching calendar data with userId:', userId.value);
       const payload = {
         month: monthIndex.value + 1, // 1-indexed for API
         year: year.value,
         user_id: userId.value
       };
+      console.log('📡 API Payload:', payload);
       
       try {
         const response = await fetch('https://xtdz-pj2k-avay.a2.xano.io/api:9A1JJPSy/calendar', {
