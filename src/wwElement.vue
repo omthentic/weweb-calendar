@@ -135,17 +135,23 @@ export default {
     const sessionData = computed(() => {
         let result = props.content?.apiResult;
         
+        console.log('📅 Calendar - Raw apiResult:', result);
+        console.log('📅 Calendar - apiResult type:', typeof result);
+        
         // Handle if apiResult is a JSON string instead of an object
         if (typeof result === 'string') {
             try {
                 result = JSON.parse(result);
+                console.log('📅 Calendar - Parsed apiResult:', result);
             } catch (e) {
-                console.error('Failed to parse apiResult:', e);
+                console.error('❌ Calendar - Failed to parse apiResult:', e);
                 return {};
             }
         }
         
         if (!result || !Array.isArray(result.return)) {
+            console.warn('⚠️ Calendar - Invalid apiResult format. Expected: {return: [{date, count}]}');
+            console.log('📅 Calendar - result.return:', result?.return);
             return {};
         }
         
@@ -155,6 +161,10 @@ export default {
                 sessionMap[item.date] = item.count;
             }
         });
+        
+        console.log('✅ Calendar - Processed sessionMap:', sessionMap);
+        console.log('✅ Calendar - Total dates:', Object.keys(sessionMap).length);
+        
         return sessionMap;
     });
     const displayedDate = computed(() => {

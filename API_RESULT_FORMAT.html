@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar API Result Format Test</title>
+</head>
+<body>
+    <h1>Calendar API Result Format</h1>
+    
+    <h2>Required Format:</h2>
+    <p>The apiResult property must be an object (or JSON string) with this exact structure:</p>
+    
+    <h3>Option 1: As JavaScript Object</h3>
+    <pre><code>{
+  "return": [
+    {
+      "date": "2025-11-12",
+      "count": 3
+    },
+    {
+      "date": "2025-11-07",
+      "count": 3
+    },
+    {
+      "date": "2025-11-02",
+      "count": 1
+    }
+  ]
+}</code></pre>
+
+    <h3>Option 2: As JSON String</h3>
+    <pre><code>'{"return":[{"date":"2025-11-12","count":3},{"date":"2025-11-07","count":3}]}'</code></pre>
+
+    <h2>Important Notes:</h2>
+    <ul>
+        <li><strong>Must have "return" key</strong> - The top level must be an object with a "return" property</li>
+        <li><strong>"return" must be an array</strong> - Contains array of date objects</li>
+        <li><strong>Each item needs "date" and "count"</strong> - Both are required</li>
+        <li><strong>Date format: "YYYY-MM-DD"</strong> - Must be ISO date string (e.g., "2025-11-12")</li>
+        <li><strong>Count must be a number</strong> - Not a string</li>
+    </ul>
+
+    <h2>Color Logic:</h2>
+    <ul>
+        <li><strong>count = 0 or not mentioned</strong> → None Date Colour (empty/gray)</li>
+        <li><strong>count = 1 or 2</strong> → Some Date Colour (dateBoxColor1)</li>
+        <li><strong>count >= 3</strong> → Lots Date Colour (dateBoxColor2)</li>
+    </ul>
+
+    <h2>In WeWeb:</h2>
+    <ol>
+        <li>Select your calendar component</li>
+        <li>Find the "API Result" property in the settings panel</li>
+        <li>You can either:
+            <ul>
+                <li>Bind it to a variable/collection that returns the object format above</li>
+                <li>Or paste the JSON directly (it will auto-parse if it's a valid JSON string)</li>
+            </ul>
+        </li>
+    </ol>
+</body>
+</html>
