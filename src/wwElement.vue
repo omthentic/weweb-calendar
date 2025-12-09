@@ -79,6 +79,11 @@
                     @click="handleDateClick(cell.dateStr)"
                 ></div>
                 
+                <!-- Tooltip -->
+                <div class="day-tooltip" v-if="cell.count !== undefined">
+                  {{ cell.count === 1 ? 'Session: ' : 'Sessions: ' }}{{ cell.count }}
+                </div>
+
                 <!-- Today Indicator Circle -->
                 <div 
                   v-if="cell.dateStr === todayDateStr" 
@@ -569,5 +574,41 @@ export default {
 .slide-right-leave-to {
   transform: translateX(100%);
   opacity: 0;
+}
+
+/* TOOLTIP STYLES */
+.day-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-5px);
+  background-color: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Arrow for the tooltip */
+.day-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+.day-cell-wrapper:hover .day-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-8px);
 }
 </style>
