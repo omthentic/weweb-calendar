@@ -67,7 +67,7 @@
         <div :key="`calendar-${monthIndex}-${year}`" class="days-grid-wrapper">
           <div class="days-grid">
             <div 
-              v-for="cell in calendarGrid" 
+              v-for="(cell, index) in calendarGrid" 
               :key="cell.key"
               class="day-cell-wrapper"
             >
@@ -80,8 +80,12 @@
                 ></div>
                 
                 <!-- Tooltip -->
-                <div class="day-tooltip" v-if="cell.count !== undefined">
-                  {{ cell.count === 1 ? 'Session: ' : 'Sessions: ' }}{{ cell.count }}
+                <div 
+                  class="day-tooltip" 
+                  :class="{ 'tooltip-bottom': index < 7 }"
+                  v-if="cell.count !== undefined"
+                >
+                  {{ cell.count }} {{ cell.count === 1 ? 'session' : 'sessions' }}
                 </div>
 
                 <!-- Today Indicator Circle -->
@@ -607,8 +611,25 @@ export default {
   border-color: #333 transparent transparent transparent;
 }
 
+/* Bottom Tooltip (for top row) */
+.day-tooltip.tooltip-bottom {
+  bottom: auto;
+  top: 100%;
+  transform: translateX(-50%) translateY(5px);
+}
+
+.day-tooltip.tooltip-bottom::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #333 transparent;
+}
+
 .day-cell-wrapper:hover .day-tooltip {
   opacity: 1;
   transform: translateX(-50%) translateY(-8px);
+}
+
+.day-cell-wrapper:hover .day-tooltip.tooltip-bottom {
+  transform: translateX(-50%) translateY(8px);
 }
 </style>
